@@ -3,7 +3,7 @@ from lxml import etree
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, Table
-
+from sqlalchemy import create_engine, func
 
 Base = declarative_base()
 engine = create_engine('mysql://root:password@localhost:3306/countres')
@@ -19,7 +19,7 @@ class Countres(Base):
 
 
 
-engine = create_engine('mysql://root:password@localhost:3306', echo=True)
+engine = create_engine('mysql://root:password@localhost:3306')
 
 print(Base.metadata.tables["country"])
 
@@ -79,3 +79,18 @@ for i in range(3, len(data[0])):
     #print(country.region)
     session.add(country)
     session.commit()
+
+
+
+"""regions = session.query(Countres.region).filter(Countres.id != None).group_by(Countres.region).all()
+print (regions)
+
+"""
+for regions in session.query(Countres.region, func.max(Countres.population), func.min(Countres.population), func.sum(Countres.population)).group_by(Countres.region).all():
+    print (regions[0])
+    print (regions[3])
+    print(session.query(Countres.country).filter(regions[1] == Countres.population).filter(regions[0] == Countres.region).first()[0])
+    print (regions[1])
+    print(session.query(Countres.country).filter(regions[2] == Countres.population).filter(regions[0] == Countres.region).first()[0])
+    print (regions[2])
+    print("..............")

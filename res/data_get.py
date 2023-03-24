@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, func
-from models import Countres
+from parse import Countres
 
 engine = create_engine('mysql://root:password@localhost:3306/countres')
 DBSession = sessionmaker(bind=engine)
