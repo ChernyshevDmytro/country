@@ -1,0 +1,31 @@
+version : '3'
+
+
+services:
+
+  black_mamba_sql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: countres
+    ports:
+      ["3306:3306"]
+
+
+  app:    
+    container_name: black_mamba_new
+    ports:
+      - "5000:5000"   
+    environment:
+      - SQLALCHEMY_DATABASE_URI=mysql://root:password@172.17.0.1/countres
+      - GUNICORN_TIMEOUT=60
+      - GUNICORN_WORKERS=2
+      - GUNICORN_LOGLEVEL=DEBUG
+      - OFFLINE_MODE=False # True for offline, False for external resources
+    build: 
+      dockerfile: Dockerfile1
+    depends_on:
+      - black_mamba_sql
+
+
+

@@ -1,0 +1,5 @@
+sqlalchemy
+mysqlclient
+mysql-connector-python
+lxml
+requests

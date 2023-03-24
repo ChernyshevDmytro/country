@@ -1,0 +1,35 @@
+version : '3'
+
+volumes:
+  mysql_data:
+    driver: local
+
+services:
+
+
+  app:
+    container_name: country  
+      
+    environment:
+      #- SQLALCHEMY_DATABASE_URI=mysql://root:password@localhost:3306/countres
+      - OFFLINE_MODE=False # True for offline, False for external resources
+    build: 
+      dockerfile: Dockerfile1
+
+    depends_on:
+      - black_sql
+
+  black_sql:
+    image: mysql:latest
+    #container_name: sql_n
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: countres
+      MYSQL_ALLOW_EMPTY_PASSWORD: True
+    restart: always
+    ports:
+      ["3306:3306"]
+    expose:
+      - localhost:3306
+
